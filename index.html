@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EcoSolarHub | Energía Solar</title>
+<meta name="description" content="EcoSolarHub: venta, instalación, servicio y proyectos de energía solar en Cuba.">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--g:#0b6b4f;--g2:#15966d;--s:#f5b82e;--d:#10251e;--m:#667770;--bg:#f4f8f6;--w:#fff;--l:#dce8e2}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;color:var(--d);background:var(--bg)}a{text-decoration:none;color:inherit}.wrap{width:min(1180px,92%);margin:auto}
+header{position:sticky;top:0;z-index:20;background:#ffffffed;backdrop-filter:blur(12px);border-bottom:1px solid var(--l)}
+.nav{height:74px;display:flex;align-items:center;justify-content:space-between;gap:18px}.logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.2rem}.siteLogo{width:190px;height:54px;object-fit:contain;object-position:left center}.footerLogo{width:210px;height:62px;object-fit:contain;object-position:left center}.sun{width:40px;height:40px;border-radius:12px;background:var(--s);display:grid;place-items:center;font-size:21px}
+nav{display:flex;gap:24px;font-weight:700;color:#3f554d}.navbuttons{display:flex;gap:8px}.btn{border:0;border-radius:12px;padding:11px 15px;font-weight:800;cursor:pointer}.primary{background:var(--g);color:#fff}.light{background:#edf5f1;color:var(--g)}.cart{position:relative}.count{position:absolute;right:-5px;top:-7px;background:var(--s);color:#111;width:21px;height:21px;border-radius:50%;font-size:11px;display:grid;place-items:center}
+.hero{padding:78px 0;background:radial-gradient(circle at 85% 15%,#f8cf67 0,transparent 24%),linear-gradient(135deg,#e5f3ed,#f8fbfa)}.heroGrid{display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center}.eyebrow{text-transform:uppercase;letter-spacing:.09em;color:var(--g);font-size:.76rem;font-weight:900}h1{font-size:clamp(2.7rem,6vw,5rem);line-height:.98;letter-spacing:-.055em;margin:15px 0 22px}.hero p{font-size:1.1rem;line-height:1.7;color:var(--m);max-width:650px}.heroBtns{display:flex;gap:10px;margin-top:25px;flex-wrap:wrap}.visual{height:380px;border-radius:32px;background:linear-gradient(145deg,#164735,#0a7654);position:relative;overflow:hidden;box-shadow:0 20px 55px #123a2d2b}.visual .sunball{position:absolute;right:50px;top:35px;width:105px;height:105px;border-radius:50%;background:var(--s);box-shadow:0 0 70px #f5b82e88}.solarPanel{position:absolute;left:12%;bottom:45px;width:76%;height:53%;transform:skewY(-8deg) rotate(-2deg);border:2px solid #8ab4a6;border-radius:9px;background:repeating-linear-gradient(90deg,#1d6170 0 10%,#153e50 10.5% 20%),repeating-linear-gradient(0deg,#ffffff14 0 12%,transparent 12.5% 25%);box-shadow:0 20px 40px #0004}
+section{padding:72px 0}.head{display:flex;justify-content:space-between;gap:25px;align-items:end;margin-bottom:28px}.head p{max-width:600px;color:var(--m);line-height:1.6}.head h2{font-size:clamp(2rem,4vw,3rem);margin:7px 0;letter-spacing:-.04em}
+.cats,.products,.features,.projects{display:grid;gap:18px}.cats{grid-template-columns:repeat(4,1fr)}.cat,.feature{background:#fff;border:1px solid var(--l);border-radius:18px;padding:20px}.catIcon{font-size:29px;margin-bottom:15px}.cat span,.feature p{color:var(--m);font-size:.9rem;line-height:1.5}.products{grid-template-columns:repeat(4,1fr)}.product{background:#fff;border:1px solid var(--l);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 7px 25px #10251e0b}.pic{height:175px;background:linear-gradient(145deg,#e5f2ed,#d0e8df);display:grid;place-items:center;font-size:65px}.body{padding:17px;display:flex;flex-direction:column;flex:1}.tag{font-size:.7rem;color:var(--g);font-weight:900;text-transform:uppercase}.body h3{margin:7px 0}.body p{color:var(--m);font-size:.86rem;line-height:1.45;min-height:40px}.price{font-size:1.25rem;font-weight:900;margin:8px 0 13px}.body .btn{margin-top:auto;width:100%}.features{grid-template-columns:repeat(3,1fr)}.projects{grid-template-columns:repeat(3,1fr)}.project{min-height:225px;border-radius:21px;padding:23px;color:#fff;display:flex;flex-direction:column;justify-content:end;background:linear-gradient(145deg,#164736,#0b7654)}.project:nth-child(2){background:linear-gradient(145deg,#1c4f60,#12303b)}.project:nth-child(3){background:linear-gradient(145deg,#67551e,#174332)}
+footer{background:#0a241d;color:#d8e8e1;padding:48px 0}.foot{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:35px}.foot p{color:#a7bbb3;line-height:1.6}.foot a{display:block;margin:8px 0}.copy{border-top:1px solid #29473d;margin-top:25px;padding-top:18px;color:#8ea69d;font-size:.82rem}
+.overlay{display:none;position:fixed;inset:0;background:#07181199;z-index:50}.overlay.show{display:block}.drawer{position:absolute;right:0;top:0;height:100%;width:min(470px,95vw);background:#fff;padding:25px;overflow:auto}.drawerHead{display:flex;justify-content:space-between;align-items:center}.close{border:0;background:#edf4f1;border-radius:50%;width:38px;height:38px;cursor:pointer;font-size:20px}.cartItem{display:grid;grid-template-columns:1fr auto;gap:10px;padding:15px 0;border-bottom:1px solid var(--l)}.qty{display:flex;gap:7px;align-items:center;margin-top:7px}.qty button{border:1px solid var(--l);background:#fff;border-radius:7px;width:27px;height:27px}.total{display:flex;justify-content:space-between;font-size:1.2rem;font-weight:900;padding:20px 0}
+.modal{display:none;position:fixed;inset:0;background:#071811aa;z-index:60;align-items:center;justify-content:center;padding:18px}.modal.show{display:flex}.card{background:#fff;width:min(760px,100%);max-height:94vh;overflow:auto;border-radius:22px;padding:26px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:.87rem;font-weight:800}.field input,.field select,.field textarea{border:1px solid var(--l);border-radius:10px;padding:11px;outline:none}.notice{background:#edf7f2;color:var(--g);border-radius:11px;padding:12px;margin:14px 0;font-size:.88rem}.adminRow{display:grid;grid-template-columns:1fr 110px 110px auto;gap:7px;align-items:center;border:1px solid var(--l);padding:9px;border-radius:10px;margin:8px 0}.adminRow input{min-width:0;border:1px solid var(--l);border-radius:8px;padding:8px}.hide{display:none!important}
+@media(max-width:900px){nav{display:none}.heroGrid{grid-template-columns:1fr}.cats,.products{grid-template-columns:repeat(2,1fr)}.projects,.features{grid-template-columns:1fr}.foot{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.cats,.products{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.adminRow{grid-template-columns:1fr 90px auto}.adminRow input:nth-child(3){display:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav">
+<a class="logo" href="#"><img class="siteLogo" src="assets/logo.png" alt="EcoSolarHub"></a>
+<nav><a href="#tienda">Tienda</a><a href="#servicios">Servicios</a><a href="#proyectos">Proyectos</a><a href="#contacto">Contacto</a></nav>
+<div class="navbuttons"><button class="btn light" onclick="adminLogin()">⚙ Admin</button><button class="btn primary cart" onclick="openCart()">🛒<span class="count" id="count">0</span></button></div>
+</div></header>
+
+<section class="hero"><div class="wrap heroGrid"><div><div class="eyebrow">Energía solar · Equipos · Proyectos</div><h1>La energía del sol, hecha para tu proyecto.</h1><p>Compra equipos y accesorios para sistemas solares y solicita asesoría para instalaciones residenciales, comerciales e industriales.</p><div class="heroBtns"><a class="btn primary" href="#tienda">Comprar ahora</a><a class="btn light" href="#proyectos">Ver proyectos</a></div></div><div class="visual"><div class="sunball"></div><div class="solarPanel"></div></div></div></section>
+
+<section id="tienda"><div class="wrap"><div class="head"><div><div class="eyebrow">Tienda online</div><h2>Equipos y accesorios</h2></div><p>Todos los precios se muestran en USD. El cliente puede solicitar entrega o recogida en tienda. La dirección de recogida se comparte de forma privada por WhatsApp.</p></div>
+<div class="cats"><div class="cat"><div class="catIcon">☀️</div><b>Paneles</b><br><span>Módulos fotovoltaicos</span></div><div class="cat"><div class="catIcon">⚡</div><b>Inversores</b><br><span>Red, híbridos y aislados</span></div><div class="cat"><div class="catIcon">🔋</div><b>Baterías</b><br><span>Almacenamiento</span></div><div class="cat"><div class="catIcon">🔌</div><b>Accesorios</b><br><span>Protecciones y conexiones</span></div></div>
+<div style="height:32px"></div><div class="products" id="products"></div></div></section>
+
+<section id="servicios" style="background:#eaf3ef"><div class="wrap"><div class="head"><div><div class="eyebrow">Soluciones</div><h2>Servicio profesional</h2></div></div><div class="features"><div class="feature"><div style="font-size:29px">🧰</div><b>Instalación</b><p>Montaje, puesta en marcha y mantenimiento de sistemas solares.</p></div><div class="feature"><div style="font-size:29px">📐</div><b>Diseño de proyectos</b><p>Dimensionamiento para viviendas, comercios e industrias.</p></div><div class="feature"><div style="font-size:29px">💬</div><b>Asesoría</b><p>Selección de equipos y soluciones según el consumo y objetivo.</p></div></div></div></section>
+
+<section id="proyectos"><div class="wrap"><div class="head"><div><div class="eyebrow">Experiencia</div><h2>Proyectos realizados</h2></div><p>Reemplaza estos ejemplos por fotografías y datos de tus instalaciones.</p></div><div class="projects"><div class="project"><small>RESIDENCIAL · 8.8 kW</small><h3>Casa familiar</h3><span>16 paneles · inversor híbrido · baterías</span></div><div class="project"><small>COMERCIAL · 25 kW</small><h3>Comercio</h3><span>Sistema conectado a red</span></div><div class="project"><small>INDUSTRIAL · 100 kW</small><h3>Proyecto industrial</h3><span>Generación fotovoltaica</span></div></div></div></section>
+
+<footer id="contacto"><div class="wrap"><div class="foot"><div><div class="logo"><img class="footerLogo" src="assets/logo.png" alt="EcoSolarHub"></div><p>Equipos, accesorios, instalación y soluciones de energía solar.</p></div><div><b>Empresa</b><a href="#tienda">Tienda</a><a href="#servicios">Servicios</a><a href="#proyectos">Proyectos</a></div><div><b>Contacto</b><p id="contact">WhatsApp: +1 000 000 0000<br>ventas@tudominio.com<br>Dirección de la tienda: se informa por WhatsApp</p></div></div><div class="copy">© <span id="year"></span> <span id="brand3">EcoSolarHub</span>. Todos los derechos reservados.</div></div></footer>
+
+<div class="overlay" id="cartOverlay" onclick="if(event.target===this)closeCart()"><aside class="drawer"><div class="drawerHead"><h2>Carrito</h2><button class="close" onclick="closeCart()">×</button></div><div id="cartItems"></div><div class="total"><span>Total</span><span id="total">$0.00</span></div><button class="btn primary" style="width:100%" onclick="checkout()">Continuar</button></aside></div>
+
+<div class="modal" id="checkoutModal"><div class="card"><div class="drawerHead"><div><div class="eyebrow">Pedido</div><h2>Datos del cliente</h2></div><button class="close" onclick="closeCheckout()">×</button></div><div class="notice">Se creará una prefactura PDF y se preparará el mensaje de WhatsApp.</div><div class="grid">
+<div class="field"><label>Nombre completo *</label><input id="name"></div><div class="field"><label>Carnet / ID *</label><input id="doc"></div>
+<div class="field"><label>Teléfono / WhatsApp *</label><input id="phone"></div><div class="field"><label>Correo</label><input id="email" type="email"></div>
+<div class="field full"><label>Dirección *</label><textarea id="address" rows="2"></textarea></div><div class="field"><label>Entrega *</label><select id="delivery"><option>Recogida en tienda</option><option>Entrega a domicilio</option></select></div><div class="field"><label>Notas</label><input id="notes"></div>
+</div><div style="display:flex;gap:10px;margin-top:18px"><button class="btn primary" onclick="createOrder()">Generar prefactura</button><button class="btn light" onclick="closeCheckout()">Cancelar</button></div></div></div>
+
+<div class="modal" id="loginModal"><div class="card" style="max-width:420px"><div class="drawerHead"><h2>Administrador</h2><button class="close" onclick="hide('loginModal')">×</button></div><div class="notice">Con Supabase activo, el acceso utiliza autenticación real.</div><div class="field"><label>Email</label><input id="loginEmail" type="email"></div><div class="field" style="margin-top:10px"><label>Contraseña</label><input id="loginPassword" type="password"></div><button class="btn primary" style="width:100%;margin-top:15px" onclick="doLogin()">Entrar</button><p id="loginMsg" style="color:#b33"></p></div></div>
+
+<div class="modal" id="adminModal"><div class="card"><div class="drawerHead"><div><div class="eyebrow">Panel privado</div><h2>Administración</h2></div><button class="close" onclick="hide('adminModal')">×</button></div><div class="notice">Los productos se guardan en Supabase cuando configures el proyecto. Sin configuración, el sitio funciona en modo demo.</div><div class="field"><label>Nombre de empresa</label><input id="adminBrand"></div><div class="field" style="margin-top:10px"><label>WhatsApp de empresa</label><input id="adminWhatsApp"></div><h3>Productos</h3><div id="adminProducts"></div><button class="btn light" style="margin-top:10px" onclick="newProduct()">＋ Producto</button><div style="margin-top:18px"><button class="btn primary" onclick="saveAdmin()">Guardar</button></div></div></div>
+
+<script>
+/* ===== CONFIGURACIÓN =====
+   1) Crea un proyecto en Supabase.
+   2) Sustituye estos dos valores.
+   3) Ejecuta database.sql incluido en este proyecto.
+*/
+const SUPABASE_URL="TU_SUPABASE_URL";
+const SUPABASE_ANON_KEY="TU_SUPABASE_ANON_KEY";
+const supaReady=SUPABASE_URL.startsWith("https://") && SUPABASE_ANON_KEY.length>20;
+const supa=supaReady?supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
+
+const demo=[
+{id:1,name:"Panel Solar 550W",category:"Paneles",price:249,icon:"☀️",description:"Módulo fotovoltaico de alta eficiencia.",active:true},
+{id:2,name:"Inversor Híbrido 5kW",category:"Inversores",price:1299,icon:"⚡",description:"Solución híbrida para hogar y comercio.",active:true},
+{id:3,name:"Batería LiFePO4 5.12kWh",category:"Baterías",price:1799,icon:"🔋",description:"Almacenamiento de larga duración.",active:true},
+{id:4,name:"Kit de Conectores MC4",category:"Accesorios",price:29,icon:"🔌",description:"Conectores para instalaciones fotovoltaicas.",active:true},
+{id:5,name:"Controlador MPPT 60A",category:"Accesorios",price:189,icon:"⚙️",description:"Controlador para sistemas aislados.",active:true},
+{id:6,name:"Protección DC Solar",category:"Accesorios",price:85,icon:"🛡️",description:"Protección para strings solares.",active:true},
+{id:7,name:"Panel Solar 450W",category:"Paneles",price:199,icon:"☀️",description:"Panel para sistemas residenciales.",active:true},
+{id:8,name:"Inversor de Red 10kW",category:"Inversores",price:1890,icon:"⚡",description:"Inversor para sistemas conectados a red.",active:true}
+];
+let products=JSON.parse(localStorage.getItem("demoProducts")||"null")||demo;
+let cart=JSON.parse(localStorage.getItem("cart")||"[]");
+let settings=JSON.parse(localStorage.getItem("settings")||"null")||{brand:"EcoSolarHub",whatsapp:"+5355496198"};
+
+const money=n=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(Number(n)||0);
+const $=id=>document.getElementById(id);
+function hide(id){$(id).classList.remove("show")}
+function show(id){$(id).classList.add("show")}
+function render(){
+ $("products").innerHTML=products.filter(p=>p.active!==false).map(p=>`<article class="product"><div class="pic">${p.icon||"☀️"}</div><div class="body"><span class="tag">${esc(p.category)}</span><h3>${esc(p.name)}</h3><p>${esc(p.description||"")}</p><div class="price">${money(p.price)}</div><button class="btn primary" onclick="add(${p.id})">Agregar al carrito</button></div></article>`).join("");
+ renderCart(); applySettings();
+}
+function esc(x){return String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function add(id){let p=products.find(x=>x.id==id);let i=cart.find(x=>x.id==id);i?i.qty++:cart.push({id,qty:1});localStorage.setItem("cart",JSON.stringify(cart));renderCart();show("cartOverlay")}
+function renderCart(){let total=0;$("count").textContent=cart.reduce((a,x)=>a+x.qty,0);$("cartItems").innerHTML=cart.length?cart.map(i=>{let p=products.find(x=>x.id==i.id);if(!p)return"";let sub=p.price*i.qty;total+=sub;return `<div class="cartItem"><div><b>${esc(p.name)}</b><br><small>${money(p.price)} × ${i.qty}</small><div class="qty"><button onclick="qty(${p.id},-1)">−</button>${i.qty}<button onclick="qty(${p.id},1)">+</button></div></div><b>${money(sub)}</b></div>`}).join(""):"<p style='color:var(--m)'>Tu carrito está vacío.</p>";$("total").textContent=money(total)}
+function qty(id,d){let i=cart.find(x=>x.id==id);if(!i)return;i.qty+=d;if(i.qty<1)cart=cart.filter(x=>x.id!=id);localStorage.setItem("cart",JSON.stringify(cart));renderCart()}
+function openCart(){show("cartOverlay")}function closeCart(){hide("cartOverlay")}
+function checkout(){if(!cart.length)return alert("Agrega productos al carrito.");closeCart();show("checkoutModal")}
+function closeCheckout(){hide("checkoutModal")}
+function total(){return cart.reduce((s,i)=>{let p=products.find(x=>x.id==i.id);return s+(p?p.price*i.qty:0)},0)}
+
+async function createOrder(){
+ let data={name:$("name").value.trim(),doc:$("doc").value.trim(),phone:$("phone").value.trim(),email:$("email").value.trim(),address:$("address").value.trim(),delivery:$("delivery").value,notes:$("notes").value.trim()};
+ if(!data.name||!data.doc||!data.phone||!data.address)return alert("Completa los campos obligatorios.");
+ let orderNo="PF-"+new Date().getFullYear()+"-"+String(Date.now()).slice(-7), amount=total();
+ let items=cart.map(i=>{let p=products.find(x=>x.id==i.id);return {name:p.name,qty:i.qty,price:p.price,subtotal:p.price*i.qty}});
+ if(supaReady){
+   const {data:ord,error}=await supa.from("orders").insert({order_number:orderNo,customer_name:data.name,customer_id:data.doc,phone:data.phone,email:data.email,address:data.address,delivery_method:data.delivery,notes:data.notes,total:amount,status:"pending"}).select().single();
+   if(error)console.warn(error);
+   if(ord)await supa.from("order_items").insert(items.map(x=>({...x,order_id:ord.id})));
+ }
+ makePdf(orderNo,data,items,amount);
+ let wa=settings.whatsapp.replace(/\D/g,"");
+ let msg=encodeURIComponent(`Hola ${data.name}, recibimos tu pedido ${orderNo}. Total: ${money(amount)}. Modalidad: ${data.delivery}. La dirección de recogida/entrega se coordina de forma privada por WhatsApp.`);
+ window.open(`https://wa.me/${wa}?text=${msg}`,"_blank");
+ cart=[];localStorage.setItem("cart","[]");closeCheckout();renderCart();
+}
+function makePdf(no,c,items,amount){
+ const {jsPDF}=window.jspdf,doc=new jsPDF();let y=22;
+ doc.setFontSize(22);doc.setTextColor(11,107,79);doc.text(settings.brand,15,y);doc.setTextColor(30);doc.setFontSize(11);doc.text("PREFACTURA",150,y);doc.text(no,150,y+7);doc.text(new Date().toLocaleDateString("es-ES"),150,y+14);
+ y+=25;doc.setDrawColor(11,107,79);doc.line(15,y,195,y);y+=12;doc.setFontSize(10);
+ doc.text(`Cliente: ${c.name}`,15,y);y+=6;doc.text(`Documento: ${c.doc}`,15,y);y+=6;doc.text(`Teléfono: ${c.phone}`,15,y);y+=6;if(c.email){doc.text(`Email: ${c.email}`,15,y);y+=6}doc.text(`Dirección: ${c.address}`,15,y);y+=6;doc.text(`Modalidad: ${c.delivery}`,15,y);y+=12;
+ doc.setFontSize(10);doc.text("Producto",15,y);doc.text("Cant.",125,y);doc.text("Precio",145,y);doc.text("Total",173,y);y+=5;doc.line(15,y,195,y);y+=8;
+ items.forEach(it=>{doc.text(String(it.name).slice(0,42),15,y);doc.text(String(it.qty),128,y);doc.text(money(it.price),145,y);doc.text(money(it.subtotal),173,y);y+=8;if(y>270){doc.addPage();y=20}});
+ y+=5;doc.setFontSize(14);doc.text(`TOTAL: ${money(amount)}`,145,y);y+=14;doc.setFontSize(9);doc.setTextColor(100);doc.text("Prefactura generada electrónicamente. No sustituye una factura fiscal cuando la ley exija factura oficial.",15,y);doc.save(`${no}.pdf`);
+}
+
+function adminLogin(){if(supaReady)show("loginModal");else openAdminDemo()}
+async function doLogin(){let {error}=await supa.auth.signInWithPassword({email:$("loginEmail").value,password:$("loginPassword").value});if(error)return $("loginMsg").textContent=error.message;hide("loginModal");openAdminPanel()}
+function openAdminDemo(){openAdminPanel()}
+async function openAdminPanel(){if(supaReady){let {data:{user}}=await supa.auth.getUser();if(!user)return show("loginModal");let r=await supa.from("products").select("*").order("id");if(!r.error&&r.data.length)products=r.data} $("adminBrand").value=settings.brand;$("adminWhatsApp").value=settings.whatsapp;renderAdmin();show("adminModal")}
+function renderAdmin(){$("adminProducts").innerHTML=products.map((p,i)=>`<div class="adminRow"><input value="${esc(p.name)}" onchange="products[${i}].name=this.value"><input type="number" step=".01" value="${p.price}" onchange="products[${i}].price=Number(this.value)"><input value="${esc(p.category)}" onchange="products[${i}].category=this.value"><button class="btn light" onclick="delProduct(${i})">×</button></div>`).join("")}
+function newProduct(){products.push({id:Date.now(),name:"Nuevo producto",category:"Accesorios",price:0,icon:"☀️",description:"",active:true});renderAdmin()}
+function delProduct(i){products.splice(i,1);renderAdmin()}
+async function saveAdmin(){
+ settings.brand=$("adminBrand").value||"EcoSolarHub";settings.whatsapp=$("adminWhatsApp").value||"";
+ if(supaReady){for(const p of products){let {error}=await supa.from("products").upsert({id:p.id,name:p.name,category:p.category,price:p.price,icon:p.icon||"☀️",description:p.description||"",active:p.active!==false});if(error)console.warn(error)}}
+ localStorage.setItem("demoProducts",JSON.stringify(products));localStorage.setItem("settings",JSON.stringify(settings));render();hide("adminModal");alert("Cambios guardados.");
+}
+function applySettings(){$("brand").textContent=settings.brand;$("brand2").textContent=settings.brand;$("brand3").textContent=settings.brand;$("contact").innerHTML=`WhatsApp: ${esc(settings.whatsapp)}<br>ventas@tudominio.com<br>Dirección de la tienda: se informa por WhatsApp`;$("year").textContent=new Date().getFullYear()}
+render();
+</script>
+</body>
+</html>
